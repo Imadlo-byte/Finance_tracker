@@ -88,8 +88,7 @@ class CSV:
         if filtered_df.empty:
             print("No transaction found in the given date range. ")
         else:
-            print(f"Transaction from {start_date.strftime(CSV.FORMAT)} 
-                  to {end_date.strftime(CSV.FORMAT)}")
+            print(f"Transaction from {start_date.strftime(CSV.FORMAT)} to {end_date.strftime(CSV.FORMAT)}")
             print(filtered_df.to_string(index=False, formatters={
                   "date": lambda x: x.strftime(CSV.FORMAT)}))
 
@@ -143,6 +142,12 @@ def plot_transaction(df):
                   .sum()
                   .reindex(df.index, fill_value=0)
                   )
+    
+    sum_df = (df
+            .resample("D")
+            .sum()
+            .reindex(df.index, fill_value=0)
+            )
 
     # Creating the plot using matplotlib
     # Creating the figure for a plot, setting its size
@@ -150,8 +155,8 @@ def plot_transaction(df):
 
     # Plot the different lines
     plt.plot(income_df.index, income_df["amount"], label="Income", color="g")
-    plt.plot(expense_df.index,
-             expense_df["amount"], label="Expense", color="r")
+    plt.plot(expense_df.index, expense_df["amount"], label="Expense", color="r")
+    plt.plot(sum_df.index, sum_df["amount"], label="Expense", color="y")
 
     # Labels on the graph
     plt.xlabel("Date")
