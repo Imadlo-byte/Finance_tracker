@@ -52,21 +52,34 @@ def get_amount():
             raise ValueError("Amount must be non negative, non zero value.")
         return amount
 
-    #
+    # If value error was raised -> print the message and repeat the function, asking the user again
     except ValueError as e:
         print(e)
         return get_amount()
 
 
 def get_category():
+    """Function used to get the category of the transaction from the user
+
+    Returns:
+        str: 'Income' or 'Expense'
+    """
+
+    # Ask for a category -> if the input is present in the dictionary CATEGORIES returns the tied value to the key
     category = input(
         "Enter the category ('I' for income or 'E' for expense): ").upper()
     if category in CATEGORIES:
         return CATEGORIES[category]
 
+    # If the input is not in the CATEGORIES -> show the message and repeat the function again
     print("Invalid category. Please enter 'I' for Income or 'E' for Expense. ")
     return get_category()
 
 
 def get_description():
+    """Function used to get the description of the transaction from the user
+
+    Returns:
+        str: any string
+    """
     return input("Enter the description (optional): ")
