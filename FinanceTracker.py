@@ -185,8 +185,16 @@ def main():
             start_date = get_date("Enter the start date (dd-mm-yyyy): ")
             end_date = get_date("Enter the end date (dd-mm-yyyy): ")
             df = CSV.get_transactions(start_date, end_date)
-            if input("Do you want to see the plot? (y/n) ").lower() == "y":
-                plot_transaction(df)
+            
+            while True:
+                choice = input("Would you like to see the plot? \nType: 'y' - yes or 'n' - no: ").lower()
+
+                if choice == 'y':
+                    plot_transaction(df)
+                elif choice == 'n':
+                    break
+                else:
+                    print("Invalid choice. Try again. ")
 
         elif choice == '3':
             print("Exiting...")
