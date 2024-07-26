@@ -191,6 +191,7 @@ def main():
 
                 if choice == 'y':
                     plot_transaction(df)
+                    break
                 elif choice == 'n':
                     break
                 else:
