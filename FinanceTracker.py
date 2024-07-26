@@ -82,7 +82,7 @@ class CSV:
         filtered_df = df.loc[mask]
 
         # Sorting the information based on the dates
-        filtered_df = filtered_df.sort_values("date")
+        filtered_df = filtered_df.sort_values(by = ["date"])
 
         # Printing out the data
         if filtered_df.empty:
