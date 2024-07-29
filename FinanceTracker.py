@@ -56,6 +56,39 @@ class CSV:
         print("Entry added successfully")
 
     @classmethod
+    def delete(cls):
+        """Deletes the chosen entry from the file
+        """
+        
+        # Shows the transactions
+        print("Transactions saved in the file: \n")
+        df = pd.read_csv(cls.CSV_FILE)
+        print(df)
+
+        # Asks the user which row to delete
+        try:
+            choice = int(input("\nWhich transaction would you like to delete from the file?\nType the number (Enter if you want to get back to the menu): "))
+                
+            if not choice:
+                return
+
+            if choice not in range(df["date"].count()):
+                raise ValueError
+            
+            # Delete the row
+            df = df.drop([choice])
+
+            # Save the file
+            df.to_csv(cls.CSV_FILE, index= False)
+                
+        except ValueError:
+            print("Invalid choice. Try again. ")
+            return cls.delete()
+
+            
+
+
+    @classmethod
     def get_transactions(cls, start_date, end_date):
         """Shows the user the transactions from the chosen time range.
         Prints the transactions in the chosen time range.
@@ -142,6 +175,7 @@ def plot_transaction(df):
                   .sum()
                   .reindex(df.index, fill_value=0)
                   )
+    
 
     # Creating the plot using matplotlib
     # Creating the figure for a plot, setting its size
@@ -167,15 +201,15 @@ def plot_transaction(df):
 
 
 def main():
-
     # The while loop which can be exited only with the function break
     while True:
 
         # Prints out the possible choices
         print("\n1. Add a new transaction.")
         print("2. View transactions and summary within a date range.")
-        print("3. Exit.")
-        choice = input("Enter your choice (1-3): ")
+        print("3. Delete the transaction from the file")
+        print("4. Exit.")
+        choice = input("Enter your choice (1-4): ")
 
         # Based on the user input right set of functions is applied
         if choice == "1":
@@ -198,13 +232,16 @@ def main():
                     print("Invalid choice. Try again. ")
 
         elif choice == '3':
+            CSV.delete()
+
+        elif choice == '4':
             print("Exiting...")
             break
 
         # If the input is none of the proposed, print the message
         else:
             print("Invalid choice. Enter 1, 2 or 3.")
-
+    
 
 if __name__ == "__main__":
     main()
