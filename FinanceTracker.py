@@ -2,7 +2,7 @@ import pandas as pd
 import csv
 from datetime import datetime
 
-from data_entry import get_category, get_amount, get_date, get_description
+from data_entry import get_category, get_amount, get_date, get_description, get_attribute
 
 import matplotlib.pyplot as plt
 
@@ -59,10 +59,12 @@ class CSV:
     def delete(cls):
         """Deletes the chosen entry from the file
         """
-        
+
+        # Read the file
+        df = pd.read_csv(cls.CSV_FILE)
+
         # Shows the transactions
         print("Transactions saved in the file: \n")
-        df = pd.read_csv(cls.CSV_FILE)
         print(df)
 
         # Asks the user which row to delete
@@ -84,7 +86,50 @@ class CSV:
         except ValueError:
             print("Invalid choice. Try again. ")
             return cls.delete()
+    
+    @classmethod
+    def change(cls):
+        # Read the file
+        df = pd.read_csv(cls.CSV_FILE)
 
+        # Shows the transactions
+        print("Transactions saved in the file: \n")
+        print(df)
+        try:
+            choice = int(input("\nWhich transaction would you like to modify?\nType the number (Enter if you want to get back to the menu): "))
+                
+            if not choice:
+                return
+
+            if choice not in range(df["date"].count()):
+                raise ValueError
+            
+            print(f"\nYou are modifying the row:\n{df.iloc[[choice]]}")
+
+            # Get the column to change
+            attribute = get_attribute()
+
+            print(f"\nCurrent {attribute}: {df.at[df.index[choice], attribute]}")
+
+            # Get new value which will replace the old
+            if attribute == "date":
+                new_change = get_date("Enter the new date of the transaction (Enter for today's date): ")
+            elif attribute == "amount":
+                new_change = get_amount()
+            elif attribute == "category":
+                new_change = get_category()
+            else:
+                new_change = get_description()
+
+            # Change the position in the dataFrame
+            df.at[df.index[choice], attribute] = new_change
+
+            # Save the file
+            df.to_csv(cls.CSV_FILE, index= False)
+        
+        except ValueError:
+            print("Invalid choice. Try again. ")
+            return cls.change()
             
 
 
@@ -207,9 +252,10 @@ def main():
         # Prints out the possible choices
         print("\n1. Add a new transaction.")
         print("2. View transactions and summary within a date range.")
-        print("3. Delete the transaction from the file")
-        print("4. Exit.")
-        choice = input("Enter your choice (1-4): ")
+        print("3. Change the transaction's details")
+        print("4. Delete the transaction from the file")
+        print("5. Exit.")
+        choice = input("Enter your choice (1-5): ")
 
         # Based on the user input right set of functions is applied
         if choice == "1":
@@ -230,17 +276,20 @@ def main():
                     break
                 else:
                     print("Invalid choice. Try again. ")
-
+        
         elif choice == '3':
-            CSV.delete()
+            CSV.change()
 
         elif choice == '4':
+            CSV.delete()
+
+        elif choice == '5':
             print("Exiting...")
             break
 
         # If the input is none of the proposed, print the message
         else:
-            print("Invalid choice. Enter 1, 2 or 3.")
+            print("Invalid choice. Enter the number from 1 to 5.")
     
 
 if __name__ == "__main__":

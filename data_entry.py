@@ -2,8 +2,10 @@ from datetime import datetime
 
 # Date format
 date_format = "%d-%m-%Y"
-# Categories - used to translate the input from the user
+# Categories - used to translate an input from the user
 CATEGORIES = {"I": "Income", "E": "Expense"}
+# used to translate an input from the user
+COLUMNS = {"date" : "date", "a" : "amount", "c" : "category", "d" : "description"}
 
 
 def get_date(prompt, allow_default=False):
@@ -84,5 +86,15 @@ def get_description():
     """
     return input("Enter the description (optional): ")
 
-
+def get_attribute():
+    """Function used to get from the user information about what to change in the row
+    """
+    print("\nWhat attribute would you like to change?")
+    print("Options:\n'date' - date\n'a' - amount\n'c' - category\n'd' - description")
+    attribute = input("Enter your choice: ").lower()
+    if attribute in COLUMNS:
+        return COLUMNS[attribute]
+    else:
+        print("Invalid choice. Please try again. ")
+        return get_attribute()
 
